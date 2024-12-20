@@ -60,6 +60,13 @@
       const totalAmount = document.getElementById('total-amount');
       const cartBadge = document.getElementById('cart-badge');
 
+      // تعيين الكمية الافتراضية إلى 1 إذا لم تكن موجودة
+      cart.forEach(item => {
+        if (!item.quantity || item.quantity < 1) {
+          item.quantity = 1;
+        }
+      });
+
       // تحديث عدد المنتجات والسعر الإجمالي
       itemCount.textContent = cart.length;
       totalAmount.textContent = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2) + ' E£';
@@ -88,6 +95,9 @@
         `;
         cartContainer.innerHTML += cartItem;
       });
+
+      // حفظ الكميات في LocalStorage
+      localStorage.setItem('cart', JSON.stringify(cart));
     });
 
     // تحديث كمية المنتج
@@ -121,7 +131,7 @@
       }
 
       const orderDetails = cart
-        .map(item => `- ${item.name}: ${item.quantity} x ${item.price} E£`)
+        .map(item => `- ${item.name} (${item.quantity}): ${item.quantity} x ${item.price} E£`)
         .join('\n');
       const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
