@@ -9,43 +9,60 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     rel="stylesheet"
   >
-  <script>
-    // دالة لإضافة المنتجات إلى LocalStorage
-    function addToCart(id, name, price, image) {
-      const product = { id, name, price, image };
+  <style>
+    /* تصميم الحركة للإعلانات */
+    .ad-container {
+      overflow: hidden;
+      position: relative;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-      // الحصول على المنتجات المحفوظة حاليًا
-      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    .ad-text {
+      position: absolute;
+      font-size: 2rem;
+      white-space: nowrap;
+      animation: slide-left 12s linear infinite; /* تقليل السرعة إلى النصف */
+    }
 
-      // التحقق إذا كان المنتج موجود مسبقًا
-      const exists = cart.some(item => item.id === id);
-      if (!exists) {
-        cart.push(product); // إضافة المنتج
-        localStorage.setItem('cart', JSON.stringify(cart)); // حفظ التحديث
-        alert(`${name} تم إضافته إلى العربة!`);
-      } else {
-        alert('هذا المنتج موجود بالفعل في العربة!');
+    @keyframes slide-left {
+      from {
+        transform: translateX(100%);
       }
-      
-      // تحديث عداد العربة
-      updateCartCount();
+      to {
+        transform: translateX(-100%);
+      }
+    }
+  </style>
+  <script>
+    // إعلانات متعددة
+    const ads = [
+      "🎉 خصومات كبيرة على المنتجات!",
+      "✨ اشترِ الآن واحصل على شحن مجاني!",
+      "🔥 عرض خاص: اشتري 2 واحصل على 1 مجانًا!",
+      "🌟 منتجات جديدة وصلت! اكتشفها الآن.",
+      "🎁 هدية مجانية عند الشراء بقيمة 500 جنيه أو أكثر!"
+    ];
+
+    let currentAdIndex = 0;
+
+    function updateAd() {
+      const adElement = document.getElementById('ad-text');
+      adElement.textContent = ads[currentAdIndex];
+      currentAdIndex = (currentAdIndex + 1) % ads.length;
     }
 
-    // دالة لتحديث عداد العربة
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      document.getElementById("cart-count").textContent = cart.length;
-    }
-
-    // عند تحميل الصفحة
-    document.addEventListener('DOMContentLoaded', updateCartCount);
+    // تغيير الإعلان كل 5 ثوانٍ
+    setInterval(updateAd, 5000);
   </script>
 </head>
 <body class="bg-white text-gray-800 font-sans">
 
   <!-- Announcement Bar -->
-  <div class="ad-container bg-black text-white p-2 text-center">
-    <span>🎉 خصومات كبيرة على المنتجات!</span>
+  <div class="ad-container bg-black text-white">
+    <span id="ad-text" class="ad-text">🎉 خصومات كبيرة على المنتجات!</span>
   </div>
 
   <!-- Main Content -->
@@ -128,6 +145,19 @@
           <h3 class="text-sm font-semibold">برفان لوديا حريمي</h3>
           <p class="text-gray-600">300.00 E£</p>
           <button onclick="addToCart(4, 'برفان لوديا حريمي', 300.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+        <!-- Additional Products -->
+        <div class="border p-4 rounded">
+          <img src="https://via.placeholder.com/150" alt="Shampoo" class="w-full h-32 object-cover mb-2 rounded" />
+          <h3 class="text-sm font-semibold">شامبو ضد القشرة</h3>
+          <p class="text-gray-600">180.00 E£</p>
+          <button onclick="addToCart(5, 'شامبو ضد القشرة', 180.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+        <div class="border p-4 rounded">
+          <img src="https://via.placeholder.com/150" alt="Face Mask" class="w-full h-32 object-cover mb-2 rounded" />
+          <h3 class="text-sm font-semibold">ماسك طبيعي للوجه</h3>
+          <p class="text-gray-600">120.00 E£</p>
+          <button onclick="addToCart(6, 'ماسك طبيعي للوجه', 120.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
         </div>
       </div>
     </div>
