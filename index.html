@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROYS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    rel="stylesheet"
+  >
+  <script>
+    // دالة لإضافة المنتجات إلى LocalStorage
+    function addToCart(id, name, price, image) {
+      const product = { id, name, price, image };
+
+      // الحصول على المنتجات المحفوظة حاليًا
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // التحقق إذا كان المنتج موجود مسبقًا
+      const exists = cart.some(item => item.id === id);
+      if (!exists) {
+        cart.push(product); // إضافة المنتج
+        localStorage.setItem('cart', JSON.stringify(cart)); // حفظ التحديث
+        alert(`${name} تم إضافته إلى العربة!`);
+      } else {
+        alert('هذا المنتج موجود بالفعل في العربة!');
+      }
+      
+      // تحديث عداد العربة
+      updateCartCount();
+    }
+
+    // دالة لتحديث عداد العربة
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      document.getElementById("cart-count").textContent = cart.length;
+    }
+
+    // عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</head>
+<body class="bg-white text-gray-800 font-sans">
+
+  <!-- Announcement Bar -->
+  <div class="ad-container bg-black text-white p-2 text-center">
+    <span>🎉 خصومات كبيرة على المنتجات!</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex flex-col items-center p-4 max-w-md mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-black">ROYS</h1>
+    </div>
+
+    <!-- Search and WhatsApp -->
+    <div class="flex items-center justify-between w-full mb-4">
+      <div class="relative w-full">
+        <input
+          class="border border-gray-300 rounded-full py-2 px-4 w-full"
+          placeholder="Search products"
+          type="text"
+        />
+        <i
+          class="fas fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+        ></i>
+      </div>
+      <div
+        class="flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 cursor-pointer ml-4"
+      >
+        <a
+          href="https://wa.me/201024477199"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <i class="fab fa-whatsapp text-green-500 text-xl"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Products Section -->
+    <div class="w-full mb-8">
+      <h2 class="text-lg font-semibold mb-2">PRODUCTS</h2>
+      <div class="border-b-2 border-blue-500 w-16 mb-4"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Product 1 -->
+        <div class="border p-4 rounded">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Vitamin C"
+            class="w-full h-32 object-cover mb-2 rounded"
+          />
+          <h3 class="text-sm font-semibold">فيتامين سي للبشرة</h3>
+          <p class="text-gray-600">200.00 E£</p>
+          <button onclick="addToCart(1, 'فيتامين سي للبشرة', 200.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+        <!-- Product 2 -->
+        <div class="border p-4 rounded">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="3 Soaps"
+            class="w-full h-32 object-cover mb-2 rounded"
+          />
+          <h3 class="text-sm font-semibold">عرض 3 غسول بسعر واحد</h3>
+          <p class="text-gray-600">250.00 E£</p>
+          <button onclick="addToCart(2, 'عرض 3 غسول بسعر واحد', 250.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+        <!-- Product 3 -->
+        <div class="border p-4 rounded">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Skin Cream"
+            class="w-full h-32 object-cover mb-2 rounded"
+          />
+          <h3 class="text-sm font-semibold">كريم مرطب للبشرة وتفتيح</h3>
+          <p class="text-gray-600">150.00 E£</p>
+          <button onclick="addToCart(3, 'كريم مرطب للبشرة وتفتيح', 150.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+        <!-- Product 4 -->
+        <div class="border p-4 rounded">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="Perfume"
+            class="w-full h-32 object-cover mb-2 rounded"
+          />
+          <h3 class="text-sm font-semibold">برفان لوديا حريمي</h3>
+          <p class="text-gray-600">300.00 E£</p>
+          <button onclick="addToCart(4, 'برفان لوديا حريمي', 300.00, 'https://via.placeholder.com/150')" class="w-full bg-blue-500 text-white py-1 rounded mt-2">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Navigation -->
+  <div
+    class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300"
+  >
+    <div class="flex justify-around py-2">
+      <div class="flex flex-col items-center">
+        <i class="fas fa-home text-xl text-gray-600"></i>
+        <span class="text-sm text-gray-600">Home</span>
+      </div>
+      <div class="relative flex flex-col items-center">
+        <a href="cart.html" target="_blank" class="flex flex-col items-center">
+          <i class="fas fa-shopping-cart text-xl text-gray-600"></i>
+          <span id="cart-count" class="absolute -top-2 -right-4 bg-red-500 text-white text-xs rounded-full px-2">0</span>
+          <span class="text-sm text-gray-600">Cart</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
