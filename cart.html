@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -61,29 +62,47 @@
 
       // تحديث عدد المنتجات والسعر الإجمالي
       itemCount.textContent = cart.length;
-      totalAmount.textContent = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2) + ' E£';
+      totalAmount.textContent = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2) + ' E£';
       cartBadge.textContent = cart.length;
 
       // عرض المنتجات في الصفحة
       cart.forEach(item => {
         const cartItem = `
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between border-b pb-2">
             <div class="flex items-center space-x-2">
-              <button class="text-blue-500 text-xl" onclick="removeItem(${item.id})">
+              <button class="text-red-500 text-xl" onclick="removeItem(${item.id})">
                 <i class="fas fa-times-circle"></i>
               </button>
               <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded" />
               <div>
-                <p class="text-sm">${item.name}</p>
-                <p class="text-sm text-gray-500">1 x ${item.price} E£</p>
+                <p class="text-sm font-semibold">${item.name}</p>
+                <p class="text-sm text-gray-500">${item.quantity} x ${item.price} E£</p>
               </div>
             </div>
-            <p class="text-blue-500">${item.price} E£</p>
+            <div class="flex items-center space-x-2">
+              <button class="px-2 py-1 bg-gray-200 text-gray-600 rounded" onclick="updateQuantity(${item.id}, -1)">-</button>
+              <span class="px-2">${item.quantity}</span>
+              <button class="px-2 py-1 bg-gray-200 text-gray-600 rounded" onclick="updateQuantity(${item.id}, 1)">+</button>
+            </div>
           </div>
         `;
         cartContainer.innerHTML += cartItem;
       });
     });
+
+    // تحديث كمية المنتج
+    function updateQuantity(productId, change) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const product = cart.find(item => item.id === productId);
+      if (product) {
+        product.quantity += change;
+        if (product.quantity <= 0) {
+          cart = cart.filter(item => item.id !== productId);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        location.reload(); // إعادة تحميل الصفحة لتحديث العربة
+      }
+    }
 
     // حذف المنتج من العربة
     function removeItem(productId) {
@@ -102,9 +121,9 @@
       }
 
       const orderDetails = cart
-        .map(item => `- ${item.name}: ${item.price} E£`)
+        .map(item => `- ${item.name}: ${item.quantity} x ${item.price} E£`)
         .join('\n');
-      const total = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+      const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
       const message = `مرحبًا، أرغب في طلب المنتجات التالية:\n${orderDetails}\n\nإجمالي: ${total} E£`;
       const whatsappUrl = `https://wa.me/201024477199?text=${encodeURIComponent(message)}`;
